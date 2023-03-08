@@ -1,0 +1,221 @@
+<!--suppress HtmlUnknownTarget, CssUnusedSymbol -->
+
+<html>
+<head>
+    <title>Brand Name Here</title>
+    <link rel="icon" href="img.png">
+</head>
+<body>
+<div class="title">Brand Name Here</div>
+<div class="applications"></div>
+<div class="staff-btn" onclick="location.href = '/view'" hidden>Review Applications</div>
+<div class="create-popup" style="display: none; pointer-events: none">
+    <div class="popup-container">
+        <svg width="48" height="32" onclick="closeAppPopup()">
+            <path d="M20 12 L28 21Z" stroke="white"></path>
+            <path d="M28 12 L20 21Z" stroke="white"></path>
+        </svg>
+        <h1 class="new-h1">Create Application</h1>
+        <p class="new-par">Select the app you want to fill in:</p>
+        <select class="new-select"></select>
+        <div class="new-submit" onclick="createApp(document.querySelector('.new-select').value * 1)">Create</div>
+    </div>
+</div>
+<div class="login-container" hidden>
+    <div class="login-btn" onclick="location.href = './login'"><img src="discord.png"></div>
+</div>
+<div class="loading">
+    <div>Loading...</div>
+</div>
+</body>
+</html>
+<script src="socket.io.min.js"></script>
+<script src="utils.js"></script>
+<script type="module" src="index.js"></script>
+<style>
+    * {
+        user-select: none;
+    }
+
+    body {
+        margin: 0;
+        background: #36393F;
+        color: white;
+        font-family: Arial, serif;
+        font-size: 20px;
+    }
+
+    .title {
+        position: absolute;
+        left: 50%;
+        top: 10%;
+        translate: -50%;
+    }
+
+    .applications {
+        position: absolute;
+        top: 20%;
+        height: max-content;
+        left: calc(50% - 3px);
+        translate: -50%;
+        width: 40%;
+    }
+
+    .application {
+        padding: 20px;
+        transition: scale .2s, background-color .2s, rotate .2s;
+        width: calc(100% - 40px);
+        cursor: pointer;
+        height: 42px;
+        border: 3px solid #707070;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .application:hover {
+        scale: .97;
+        background-color: #707070;
+        rotate: 1deg;
+    }
+
+    .application > .edited {
+        text-align: right;
+        color: #ababab;
+    }
+
+    .create > svg {
+        margin-left: 50%;
+        translate: -50%;
+        padding: 5px;
+        margin-top: -5px;
+    }
+
+    .create:hover + svg {
+        background-color: red;
+    }
+
+    ::-webkit-scrollbar {
+        overflow: auto;
+        width: 10px;
+        color: #888888;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #888888;
+        border-radius: 20px;
+        border: 2px solid #a2a2a2;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #555555;
+    }
+
+    .loading, .login-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(2px);
+    }
+
+    .loading > div, .login-btn {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        translate: -50% -50%;
+    }
+
+    .login-btn > img {
+        width: 256px;
+    }
+
+    .login-btn {
+        transition: scale .2s, background-color .2s;
+        cursor: pointer;
+        background-color: #7289da;
+        border-radius: 5px;
+    }
+
+    .login-btn:hover {
+        scale: 1.1;
+        background-color: #8b9fe7;
+    }
+
+    .create-popup {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(2px);
+    }
+
+    .popup-container {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60%;
+        height: 60%;
+        min-height: 400px;
+        background-color: #707070;
+        border-radius: 10px;
+        transition: translate .5s;
+        text-align: center;
+    }
+
+    .popup-container > svg {
+        background-color: red;
+        position: absolute;
+        right: 0;
+        border-top-right-radius: 10px;
+        transition: background-color .2s;
+        cursor: pointer;
+    }
+
+    .popup-container > svg:hover {
+        background-color: #ff4545;
+    }
+
+    .popup-container > .new-par {
+        margin-top: 60px;
+    }
+
+    .new-select {
+        outline: none;
+        border: none;
+        padding: 8px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        background-color: #444444;
+    }
+
+    .popup-container > .new-submit, .staff-btn {
+        position: absolute;
+        left: 50%;
+        translate: -50%;
+        bottom: 30px;
+        background-color: #8b9fe7;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: scale .2s;
+    }
+
+    .staff-btn {
+        left: 15px;
+        top: 15px;
+        translate: 0;
+        bottom: auto;
+    }
+
+    .popup-container > .new-submit:hover, .staff-btn:hover {
+        scale: 1.1;
+    }
+</style>

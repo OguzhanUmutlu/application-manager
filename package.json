@@ -1,0 +1,10 @@
+{
+  "name": "application-manager",
+  "version": "1.0.0",
+  "dependencies": {
+    "better-passport": "1.1.5",
+    "express": "^4.18.2",
+    "quick.db": "^9.0.8",
+    "socket.io": "^4.6.1"
+  }
+}

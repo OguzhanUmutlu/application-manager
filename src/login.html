@@ -1,0 +1,25 @@
+<!--suppress HtmlUnknownTarget -->
+<script src="socket.io.min.js"></script>
+<script type="module">
+    if (localStorage.getItem("t")) location.href = "/";
+    const socket = io();
+    const query = new URLSearchParams(location.href.split("?").slice(1).join("?"));
+    if (!query.get("code")) location.href = "/";
+    socket.on("connect", () => {
+        socket.emit("register", query.get("code"));
+    });
+    socket.on("register", d => {
+        if(d.success) {
+            localStorage.setItem("t", d.result);
+            location.href = "/";
+        } else location.href = "/";
+    });
+    socket.on("disconnect", () => {
+        location.href = "/";
+    });
+</script>
+<style>
+    body {
+        background: #36393F;
+    }
+</style>

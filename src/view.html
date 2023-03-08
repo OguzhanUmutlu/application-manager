@@ -1,0 +1,232 @@
+<!--suppress HtmlUnknownTarget, CssUnusedSymbol -->
+
+<html>
+<head>
+    <title>Brand Name Here</title>
+    <link rel="icon" href="img.png">
+</head>
+<body>
+<div class="container">
+    <div class="results"></div>
+    <div class="cards"></div>
+</div>
+<div class="navbar">
+    <div class="nav-con">
+        <div class="back-btn btn" onclick="location.href = '/'">Back</div>
+        <div class="nav-item filter-app">
+            Filter applications
+            <div class="nav-list" style="display: none"></div>
+        </div>
+        <div class="nav-item filter-user">
+            Filter users
+            <div class="nav-list" style="display: none">
+                <select></select>
+            </div>
+        </div>
+        <div class="nav-item filter-status">
+            Filter status
+            <div class="nav-list" style="display: none">
+                <div class="nav-list-item">
+                    <div class="checkbox checkbox-on" data-checkbox-id="stat-0"></div>
+                    Not submitted
+                </div>
+                <div class="nav-list-item">
+                    <div class="checkbox checkbox-on" data-checkbox-id="stat-1"></div>
+                    Pending
+                </div>
+                <div class="nav-list-item">
+                    <div class="checkbox checkbox-on" data-checkbox-id="stat-2"></div>
+                    Rejected
+                </div>
+                <div class="nav-list-item">
+                    <div class="checkbox checkbox-on" data-checkbox-id="stat-3"></div>
+                    Approved
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading">
+    <div>Loading...</div>
+</div>
+</body>
+</html>
+<script src="/socket.io.min.js"></script>
+<script src="/utils.js"></script>
+<script type="module" src="/view.js"></script>
+<style>
+    * {
+        user-select: none;
+    }
+
+    body {
+        margin: 0;
+        background: #36393F;
+        color: white;
+        font-family: Arial, serif;
+        font-size: 20px;
+        overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+        overflow: auto;
+        width: 10px;
+        color: #888888;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #888888;
+        border-radius: 20px;
+        border: 2px solid #a2a2a2;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #555555;
+    }
+
+    .loading {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(2px);
+    }
+
+    .loading > div {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        translate: -50% -50%;
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 50px;
+        background-color: #626262;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        display: flex;
+    }
+
+    .container {
+        position: absolute;
+        top: 50px;
+        width: max-content;
+        max-width: 100%;
+    }
+
+    .results {
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .card {
+        margin: 10px;
+        background-color: #707070;
+        border-radius: 10px;
+        padding: 10px;
+        transition: scale .3s, box-shadow .3s;
+        box-shadow: none;
+        cursor: pointer;
+    }
+
+    .card:hover {
+        scale: 1.05;
+        box-shadow: 0 0 30px #69a0d9;
+    }
+
+    .card > img {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .btn {
+        background: #89d5cf;
+        border-radius: 5px;
+        width: fit-content;
+        padding: 5px;
+        cursor: pointer;
+        transition: scale .2s;
+    }
+
+    .btn:hover {
+        scale: 1.05;
+    }
+
+    .back-btn {
+        margin-top: 15px;
+        translate: 0 -50%;
+        height: max-content;
+    }
+
+    .user-name {
+        color: #9a9999;
+    }
+
+    .user-name, .status {
+        font-size: 16px;
+    }
+
+    .nav-con {
+        margin-left: 10px;
+        margin-top: 10px;
+        display: flex;
+    }
+
+    .nav-item {
+        margin-top: -1px;
+        margin-left: 20px;
+        height: fit-content;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #a2a2a2;
+        cursor: pointer;
+    }
+
+    .nav-list {
+        border-top: 1px solid #555555;
+        margin-top: 5px;
+        padding-top: 5px;
+        cursor: default;
+    }
+
+    .nav-list-item {
+        display: flex;
+    }
+
+    .checkbox {
+        margin-top: 1px;
+        margin-right: 10px;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #555555;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .checkbox-on {
+        background-color: #69a0d9;
+    }
+
+    select {
+        background-color: #555555;
+        color: white;
+        padding: 5px;
+        outline: none;
+        border-radius: 5px;
+    }
+</style>

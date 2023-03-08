@@ -1,0 +1,304 @@
+<!--suppress HtmlUnknownTarget, CssUnusedSymbol -->
+
+<html>
+<head>
+    <title>Brand Name Here</title>
+    <link rel="icon" href="img.png">
+</head>
+<body>
+<div class="background"></div>
+<div class="container">
+    <div class="header">
+        <div class="back-btn btn" onclick="backBtn()">Back</div>
+        <div class="save-btn btn" onclick="saveBtn()" hidden>Save</div>
+        <div class="app-name"></div>
+    </div>
+    <div class="components"></div>
+    <div class="buttons" hidden>
+        <div class="submit-btn btn" onclick="nextBtn()" hidden>Submit</div>
+        <div class="next-btn btn" onclick="nextBtn()" hidden>Next</div>
+        <div class="unsubmit-btn btn" onclick="unsubmitBtn()" hidden>Remove Submission</div>
+        <div class="delete-btn btn" onclick="deleteBtn()" hidden>Delete</div>
+        <div class="reject-btn btn" onclick="rejectBtn()" hidden>Reject</div>
+        <div class="approve-btn btn" onclick="approveBtn()" hidden>Approve</div>
+    </div>
+</div>
+<div class="popup" hidden>
+    <div>
+        <div class="popup-text">Hello!</div>
+        <div class="popup-buttons">
+            <div class="popup-btn btn" onclick="closePopup()">Close</div>
+        </div>
+    </div>
+</div>
+<div class="loading">
+    <div>Loading...</div>
+</div>
+</body>
+</html>
+<script src="/socket.io.min.js"></script>
+<script src="/utils.js"></script>
+<script type="module" src="/app.js"></script>
+<style>
+    * {
+        user-select: none;
+    }
+
+    body {
+        margin: 0;
+        color: white;
+        font-family: Arial, serif;
+        font-size: 20px;
+        background: #36393F;
+        overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+        overflow: auto;
+        width: 10px;
+        color: #888888;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #888888;
+        border-radius: 20px;
+        border: 2px solid #a2a2a2;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #555555;
+    }
+
+    .loading, .popup {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(2px);
+    }
+
+    .popup {
+        background: transparent;
+    }
+
+    .popup > div {
+        background-color: #a2a2a2;
+        padding: 20px;
+        border-radius: 10px;
+        width: 30%;
+        height: 30%;
+    }
+
+    .popup-buttons {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        translate: -50%;
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+    }
+
+    .popup-btn {
+        margin: 3px;
+    }
+
+    .loading > div, .popup > div {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+    }
+
+    .background {
+        position: absolute;
+        left: 50%;
+        translate: -50%;
+        background-repeat: round;
+    }
+
+    .container {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 50%;
+        border-radius: 10px;
+        translate: -50%;
+    }
+
+    .header {
+        margin-top: 10px;
+        width: 100%;
+        height: 60px;
+        background: #565656;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .header > .app-name {
+        position: absolute;
+        left: 50%;
+        top: 38px;
+        translate: -50% -50%;
+    }
+
+    .btn {
+        background: #89d5cf;
+        border-radius: 5px;
+        width: fit-content;
+        padding: 5px;
+        cursor: pointer;
+        transition: scale .2s;
+    }
+
+    .btn:hover {
+        scale: 1.05;
+    }
+
+    .back-btn, .save-btn {
+        position: absolute;
+        top: 22px;
+        margin-left: 15px;
+    }
+
+    .save-btn {
+        right: 15px;
+        background: #8cd589;
+    }
+
+    .components {
+        padding: 30px;
+    }
+
+    .component {
+        background: #565656;
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 30px;
+        translate: -30px -30px;
+        word-wrap: anywhere;
+    }
+
+    .input {
+        width: 300px;
+        outline: none;
+        border: none;
+        background: none;
+        color: white;
+        padding: 5px;
+        font-size: 14px;
+        border-bottom: 2px solid #a2a2a2;
+        transition: border-bottom-color .2s;
+    }
+
+    .input:focus {
+        border-bottom-color: #89d5cf;
+    }
+
+    .textarea {
+        width: 100%;
+        outline: none;
+        border: none;
+        background: none;
+        color: white;
+        padding: 5px;
+        font-size: 14px;
+        border-bottom: 2px solid #a2a2a2;
+        transition: border-bottom-color .2s;
+        resize: none;
+        height: 30px;
+        font-family: Arial, serif;
+        overflow: hidden;
+    }
+
+    .textarea:focus {
+        border-bottom-color: #89d5cf;
+    }
+
+    .option {
+        display: flex;
+    }
+
+    .option > .text {
+        font-size: 16px;
+    }
+
+    .option > .checkbox {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        border: 1px solid #b7b7b7;
+        border-radius: 50%;
+        margin-top: -2px;
+        transition: background-color 1s;
+        cursor: pointer;
+    }
+
+    .option > .checkbox-on {
+        background-color: #89d5cf;
+    }
+
+    .checkbox-disabled {
+        cursor: not-allowed !important;
+    }
+
+    input:disabled, textarea:disabled {
+        cursor: not-allowed !important;
+    }
+
+    .error {
+        font-size: 13px;
+        color: #ff3d3d;
+    }
+
+    .buttons {
+        margin-top: -60px;
+        background: #565656;
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 33px;
+        display: flex;
+    }
+
+    .submit-btn, .next-btn, .unsubmit-btn, .delete-btn, .approve-btn, .reject-btn {
+        margin-left: 15px;
+    }
+
+    .unsubmit-btn {
+        background-color: #e75151;
+    }
+
+    .next-btn {
+        background-color: #b964ea !important;
+    }
+
+    .delete-btn {
+        background-color: #e75151;
+    }
+
+    .approve-btn {
+        background: #8cd589;
+    }
+
+    .reject-btn {
+        background-color: #e75151;
+    }
+
+    .component > h2 {
+        margin-top: -10px;
+    }
+
+    .square {
+        border-radius: 0 !important;
+    }
+</style>
